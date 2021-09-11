@@ -1,0 +1,7 @@
+<% module_namespacing_when_supported do -%>
+module Unions
+  class <%= type_ruby_name.split('::')[-1] %> < Unions::BaseUnion
+<% if possible_types.any? %>    possible_types <%= normalized_possible_types.join(", ") %>
+<% end %>  end
+end
+<% end -%>
