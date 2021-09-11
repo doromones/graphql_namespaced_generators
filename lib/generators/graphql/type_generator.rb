@@ -47,31 +47,36 @@ module Graphql
             when "Integer", "Float", "Boolean", "String", "ID"
               [type_expression, null]
             else
-              ["Types::#{type_expression.camelize}Type", null]
+              ["#{generator_type}s::#{type_expression.camelize}#{generator_type}", null]
             end
           when :graphql
-            [type_expression.camelize, null]
+            [type_expression.camelize, generator_type.downcase]
           else
             raise "Unexpected normalize mode: #{mode}"
           end
         end
       end
 
+      def self.generator_type
+        self.name.split('::')[-1].gsub('Generator', '')
+      end
+
       private
 
       # @return [String] The user-provided type name, normalized to Ruby code
       def type_ruby_name
+        self.class.normalize_type_expression(type_name, mode: :ruby)[0]
         @type_ruby_name ||= self.class.normalize_type_expression(type_name, mode: :ruby)[0]
       end
 
       # @return [String] The user-provided type name, as a GraphQL name
       def type_graphql_name
-        @type_graphql_name ||= self.class.normalize_type_expression(type_name, mode: :graphql)[0]
+        @type_graphql_name ||= self.class.normalize_type_expression(type_name, mode: :graphql).join('_')
       end
 
       # @return [String] The user-provided type name, as a file name (without extension)
       def type_file_name
-        @type_file_name ||= "#{type_graphql_name}Type".underscore
+        @type_file_name ||= type_graphql_name.underscore
       end
 
       # @return [Array<NormalizedField>] User-provided fields, in `(name, Ruby type name)` pairs
