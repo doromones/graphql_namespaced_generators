@@ -1,7 +1,7 @@
 <% module_namespacing_when_supported do -%>
-module Types
+module Interfaces
   module <%= type_ruby_name.split('::')[-1] %>
-    include Types::BaseInterface
+    include Interfaces::BaseInterface
 <% normalized_fields.each do |f| %>    <%= f.to_ruby %>
 <% end %>  end
 end

@@ -11,17 +11,17 @@ module Graphql
         end
 
         # Add connections and edges
-        template("base_connection.erb", "#{options[:directory]}/types/base_connection.rb")
-        template("base_edge.erb", "#{options[:directory]}/types/base_edge.rb")
+        template("base_connection.erb", "#{options[:directory]}/connections/base_connection.rb")
+        template("base_edge.erb", "#{options[:directory]}/edges/base_edge.rb")
         connectionable_type_files = {
-          "#{options[:directory]}/types/base_object.rb" => /class .*BaseObject\s*<\s*[^\s]+?\n/m,
-          "#{options[:directory]}/types/base_union.rb" =>  /class .*BaseUnion\s*<\s*[^\s]+?\n/m,
-          "#{options[:directory]}/types/base_interface.rb" => /include GraphQL::Schema::Interface\n/m,
+          "#{options[:directory]}/objects/base_object.rb" => /class .*BaseObject\s*<\s*[^\s]+?\n/m,
+          "#{options[:directory]}/unions/base_union.rb" =>  /class .*BaseUnion\s*<\s*[^\s]+?\n/m,
+          "#{options[:directory]}/interfaces/base_interface.rb" => /include GraphQL::Schema::Interface\n/m,
         }
         in_root do
           connectionable_type_files.each do |type_class_file, sentinel|
-            inject_into_file type_class_file, "    connection_type_class(Types::BaseConnection)\n", after: sentinel, force: false
-            inject_into_file type_class_file, "    edge_type_class(Types::BaseEdge)\n", after: sentinel, force: false
+            inject_into_file type_class_file, "    connection_type_class(Connections::BaseConnection)\n", after: sentinel, force: false
+            inject_into_file type_class_file, "    edge_type_class(Edges::BaseEdge)\n", after: sentinel, force: false
           end
         end
 

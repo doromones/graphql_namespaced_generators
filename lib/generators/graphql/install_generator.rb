@@ -101,8 +101,9 @@ module Graphql
         create_dir("#{options[:directory]}/types")
         template("schema.erb", schema_file_path)
 
-        ["base_object", "base_argument", "base_field", "base_enum", "base_input_object", "base_interface", "base_scalar", "base_union"].each do |base_type|
-          template("#{base_type}.erb", "#{options[:directory]}/types/#{base_type}.rb")
+        ["object", "argument", "field", "enum", "input_object", "interface", "scalar", "union"].each do |base_type|
+          create_dir("#{options[:directory]}/#{base_type}s")
+          template("base_#{base_type}.erb", "#{options[:directory]}/#{base_type}s/base_#{base_type}.rb")
         end
 
         # Note: You can't have a schema without the query type, otherwise introspection breaks
